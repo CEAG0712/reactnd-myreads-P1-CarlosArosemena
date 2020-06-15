@@ -3,7 +3,7 @@ import CategorizedSelf from "./CategorizedSelf";
 
 export class BookCollection extends Component {
   render() {
-    const { books } = this.props;
+    const { books, myShelves, handleShelfChange } = this.props;
 
     return (
       <Fragment>
@@ -12,7 +12,15 @@ export class BookCollection extends Component {
             <h1>MyReads</h1>
           </div>
           <div className="list-books-content">
-            <CategorizedSelf books={books} />
+            {myShelves.map((shelf) => (
+              <CategorizedSelf
+                books={books}
+                key={shelf.id}
+                shelf={shelf}
+                myShelves={myShelves}
+                handleShelfChange={handleShelfChange}
+              />
+            ))}
           </div>
           <div className="open-search">
             <button onClick={() => this.setState({ showSearchPage: true })}>

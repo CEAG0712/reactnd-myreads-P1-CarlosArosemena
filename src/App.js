@@ -3,6 +3,12 @@ import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import BookCollection from "./components/BookComponents/BookCollection";
 
+const myShelves = [
+  { id: "currentlyReading", title: "Currently Reading" },
+  { id: "wantToRead", title: "Want to Read" },
+  { id: "read", title: "Read" },
+];
+
 class BooksApp extends React.Component {
   state = {
     bookArray: [],
@@ -13,6 +19,23 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then((books) => {
       this.setState({ bookArray: books });
     });
+  };
+
+  handleShelfChange = (book, shelf) => {
+    BooksAPI.update(book, shelf);
+
+    if (shelf === "none") {
+      this.setState((prevState) => ({
+        bookArray: prevState.bookArray.filter((b) => b.id !== book.id),
+      }));
+    } else {
+      book.shelf = shelf;
+      this.setState((prevState) => ({
+        bookArray: prevState.bookArray
+          .filter((b) => b.id !== book.id)
+          .concat(book),
+      }));
+    }
   };
 
   render() {
@@ -45,7 +68,11 @@ class BooksApp extends React.Component {
             </div>
           </div>
         ) : (
-          <BookCollection books={bookArray} />
+          <BookCollection
+            books={bookArray}
+            myShelves={myShelves}
+            handleShelfChange={this.handleShelfChange}
+          />
         )}
       </div>
     );

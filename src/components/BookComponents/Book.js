@@ -3,14 +3,14 @@ import BookShelfChanger from "./BookShelfChanger";
 
 export class Book extends Component {
   render() {
+    const { myShelves, handleShelfChange, book } = this.props;
+
     const {
-      id,
       title,
       authors,
+      shelf,
       imageLinks: { smallThumbnail },
     } = this.props.book;
-
-    console.log(smallThumbnail);
 
     return (
       <Fragment>
@@ -25,7 +25,12 @@ export class Book extends Component {
                   backgroundImage: `url(${smallThumbnail})`,
                 }}
               ></div>
-              <BookShelfChanger />
+              <BookShelfChanger
+                book={book}
+                shelf={shelf}
+                myShelves={myShelves}
+                handleShelfChange={handleShelfChange}
+              />
             </div>
             <div className="book-title">{title}</div>
             <div className="book-authors">{authors.join(", ")}</div>
