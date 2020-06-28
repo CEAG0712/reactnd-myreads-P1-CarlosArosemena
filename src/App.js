@@ -1,7 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import BookCollection from "./components/BookComponents/BookCollection";
+import { Route } from "react-router-dom";
+import SearchComponent from "./components/SearchComponents/SearchComponent";
+import { debounce } from "throttle-debounce";
 
 const myShelves = [
   { id: "currentlyReading", title: "Currently Reading" },
@@ -12,6 +15,7 @@ const myShelves = [
 class BooksApp extends React.Component {
   state = {
     bookArray: [],
+    searchResults: [],
     showSearchPage: false,
   };
 
@@ -23,7 +27,6 @@ class BooksApp extends React.Component {
 
   handleShelfChange = (book, shelf) => {
     BooksAPI.update(book, shelf);
-
     if (shelf === "none") {
       this.setState((prevState) => ({
         bookArray: prevState.bookArray.filter((b) => b.id !== book.id),
@@ -37,42 +40,45 @@ class BooksApp extends React.Component {
       }));
     }
   };
+  //https://github.com/niksy/throttle-debounce#readme
+  searchLogic = debounce(250, false, (query) => {
+    if (query.length > 0) {
+      BooksAPI.search(query).then((books) => {
+        if (books.length > 0) {
+          this.setState({ searchResults: books });
+        } else {
+          this.setState({ searchResults: [] });
+        }
+      });
+    } else {
+      this.setState({ searchResults: [] });
+    }
+  });
 
   render() {
-    const { bookArray } = this.state;
+    const { bookArray, searchResults } = this.state;
     return (
       <div className="app">
         {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <button
-                className="close-search"
-                onClick={() => this.setState({ showSearchPage: false })}
-              >
-                Close
-              </button>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author" />
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (
-          <BookCollection
-            books={bookArray}
-            myShelves={myShelves}
+          <SearchComponent
+            bookArray={bookArray}
+            searchResults={searchResults}
+            searchLogic={this.searchLogic}
             handleShelfChange={this.handleShelfChange}
           />
+        ) : (
+          <Fragment>
+            <BookCollection
+              books={bookArray}
+              myShelves={myShelves}
+              handleShelfChange={this.handleShelfChange}
+            />
+            <div className="open-search">
+              <button onClick={() => this.setState({ showSearchPage: true })}>
+                Add a book
+              </button>
+            </div>
+          </Fragment>
         )}
       </div>
     );

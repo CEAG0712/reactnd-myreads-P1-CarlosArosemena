@@ -17,15 +17,9 @@ export class BookCollection extends Component {
                 books={books}
                 key={shelf.id}
                 shelf={shelf}
-                myShelves={myShelves}
                 handleShelfChange={handleShelfChange}
               />
             ))}
-          </div>
-          <div className="open-search">
-            <button onClick={() => this.setState({ showSearchPage: true })}>
-              Add a book
-            </button>
           </div>
         </div>
       </Fragment>

@@ -11,8 +11,6 @@ export class BookShelfChanger extends Component {
     this.props.handleShelfChange(this.props.book, value);
   };
   render() {
-    const { myShelves } = this.props;
-
     return (
       <Fragment>
         <div className="book-shelf-changer">
@@ -20,11 +18,9 @@ export class BookShelfChanger extends Component {
             <option value="move" disabled>
               Move to...
             </option>
-            {myShelves.map((shelf) => (
-              <option key={shelf.id} value={shelf.id}>
-                {shelf.title}
-              </option>
-            ))}
+            <option value="currentlyReading">Currently Reading</option>
+            <option value="wantToRead">Want to Read</option>
+            <option value="read">Read</option>
             <option value="none">None</option>
           </select>
         </div>

@@ -5,12 +5,7 @@ export class Book extends Component {
   render() {
     const { myShelves, handleShelfChange, book } = this.props;
 
-    const {
-      title,
-      authors,
-      shelf,
-      imageLinks: { smallThumbnail },
-    } = this.props.book;
+    const { title, authors, shelf, imageLinks } = this.props.book;
 
     return (
       <Fragment>
@@ -22,7 +17,11 @@ export class Book extends Component {
                 style={{
                   width: 128,
                   height: 193,
-                  backgroundImage: `url(${smallThumbnail})`,
+                  backgroundImage: `url(${
+                    imageLinks
+                      ? imageLinks.smallThumbnail
+                      : "icons/book-placeholder.svg"
+                  })`,
                 }}
               ></div>
               <BookShelfChanger
@@ -33,7 +32,9 @@ export class Book extends Component {
               />
             </div>
             <div className="book-title">{title}</div>
-            <div className="book-authors">{authors.join(", ")}</div>
+            <div className="book-authors">
+              {authors ? authors.join(", ") : "Unknown Author"}
+            </div>
           </div>
         </li>
       </Fragment>
