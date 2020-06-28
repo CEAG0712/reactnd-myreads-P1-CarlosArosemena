@@ -54,6 +54,9 @@ class BooksApp extends React.Component {
     }
   });
 
+  clearSearch = () => {
+    this.setState({ searchResults: [] });
+  };
   render() {
     const { bookArray, searchResults } = this.state;
     return (
@@ -87,7 +90,7 @@ class BooksApp extends React.Component {
 
         <div className="open-search">
           <Link to="search">
-            <button>Add a book</button>
+            <button onClick={this.clearSearch}>Add a book</button>
           </Link>
         </div>
       </div>
