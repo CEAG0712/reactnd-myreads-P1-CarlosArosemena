@@ -23,7 +23,7 @@ export class SearchResults extends Component {
               <Book
                 key={book.id}
                 book={book}
-                shelf={book.shelf ? book.shelf : "none"}
+                shelf={book.shelf || "none"}
                 handleShelfChange={handleShelfChange}
               />
             ))}

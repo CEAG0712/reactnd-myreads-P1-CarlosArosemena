@@ -14,7 +14,7 @@ export class BookShelfChanger extends Component {
     return (
       <Fragment>
         <div className="book-shelf-changer">
-          <select value={this.state.value} onChange={this.onChange}>
+          <select value={this.state.value || "none"} onChange={this.onChange}>
             <option value="move" disabled>
               Move to...
             </option>

@@ -2,9 +2,10 @@ import React, { Fragment } from "react";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import BookCollection from "./components/BookComponents/BookCollection";
-import { Route, Link } from "react-router-dom";
+import { Route, Link, Switch } from "react-router-dom";
 import SearchComponent from "./components/SearchComponents/SearchComponent";
 import { debounce } from "throttle-debounce";
+import NotFound from "./components/Layout/NotFound";
 
 const myShelves = [
   { id: "currentlyReading", title: "Currently Reading" },
@@ -61,32 +62,36 @@ class BooksApp extends React.Component {
     const { bookArray, searchResults } = this.state;
     return (
       <div className="app">
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <Fragment>
-              <BookCollection
-                books={bookArray}
-                myShelves={myShelves}
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <Fragment>
+                <BookCollection
+                  books={bookArray}
+                  myShelves={myShelves}
+                  handleShelfChange={this.handleShelfChange}
+                />
+              </Fragment>
+            )}
+          />
+
+          <Route
+            exact
+            path="/search"
+            render={() => (
+              <SearchComponent
+                bookArray={bookArray}
+                searchResults={searchResults}
+                searchLogic={this.searchLogic}
                 handleShelfChange={this.handleShelfChange}
               />
-            </Fragment>
-          )}
-        />
+            )}
+          />
 
-        <Route
-          exact
-          path="/search"
-          render={() => (
-            <SearchComponent
-              bookArray={bookArray}
-              searchResults={searchResults}
-              searchLogic={this.searchLogic}
-              handleShelfChange={this.handleShelfChange}
-            />
-          )}
-        />
+          <Route component={NotFound} />
+        </Switch>
 
         <div className="open-search">
           <Link to="search">
